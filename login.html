@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <div class="branding">
+        <img src="logo.png" alt="Logo" class="logo">
+        <img src="image.png" alt="Image" class="hero-image">
+        <h1>Reality deserves a closer look. Verify today!</h1>
+        <p>Helping you see what’s real in a world full of fakes</p>     
+      </div>
+    </div>
+    
+    <!-- Right Panel -->
+    <div class="right-panel">
+	<div class="close-icon">
+	<a href="index.html">✖</a>
+	</div>
+      <div class="form-wrapper">
+        <h1>Login</h1>
+        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+          </div>
+          <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+          <button type="submit" class="btn">Login</button>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  
+</body>
+</html>
