@@ -26,15 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value.trim();
 
         // Basic validation
-        if (!email || !password) {
-            alert('Please fill in both email and password.');
-            return;
-        }
-
-        if (!validateEmail(email)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
+       
 
         try {
             // Send login data to the API endpoint
@@ -45,33 +37,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     email: email,
-                    password: password
+                    password: password,
                 }),
             });
 
-            // Check if the response is successful
+            // Process the response
             if (response.ok) {
-                // Redirect to dashboard.html
-                window.location.href = 'dashboard.html';
-            } else {
-                const errorData = await response.json();
-                alert(`Login failed: ${errorData.message || 'Invalid email or password.'}`);
-            }
+                const responseData = await response.json();
+
+                // Check if email and password match the response
+               
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert('Invalid email or password. Please try again.');
+                }
+           
         } catch (error) {
             console.error('Error during login:', error);
             alert('An error occurred while trying to log in. Please try again later.');
         }
     });
 
-    // Add Google button functionality (placeholder)
-    const googleBtn = document.querySelector('.google-btn');
-    googleBtn.addEventListener('click', () => {
-        alert('Google login is currently under development.');
-    });
+   
 });
 
-// Helper function to validate email format
-function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
+
+

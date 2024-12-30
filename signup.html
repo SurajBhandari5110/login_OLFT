@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Signup</h2>
+        <form id="signup-form">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <form id="verify-form" style="display: none;">
+            <label for="otp">Enter OTP:</label>
+            <input type="text" id="otp" placeholder="Enter the OTP" required>
+            <button type="submit">Verify Email</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signup-form');
+            const verifyForm = document.getElementById('verify-form');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const otpInput = document.getElementById('otp');
+            const messageDiv = document.getElementById('message');
+
+            // Handle signup form submission
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                try {
+                    const response = await fetch('http://13.55.169.57:8080/auth/registration/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password }),
+                    });
+
+                    if (response.ok) {
+                        messageDiv.textContent = 'Signup successful! Check your email for the OTP.';
+                        signupForm.style.display = 'none';
+                        verifyForm.style.display = 'block';
+                    } else {
+                        const error = await response.json();
+                        messageDiv.textContent = `Signup failed: ${error.message}`;
+                    }
+                } catch (error) {
+                    messageDiv.textContent = 'An error occurred during signup. Please try again.';
+                }
+            });
+
+            // Handle OTP verification form submission
+            verifyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const email = emailInput.value.trim();
+                const otp = otpInput.value.trim();
+
+                try {
+                    const response = await fetch('http://13.55.169.57:8080/auth/verify-otp/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, otp: Number(otp) }),
+                    });
+
+                    if (response.ok) {
+                        messageDiv.textContent = 'Email verified successfully! You can now log in.';
+                        verifyForm.style.display = 'none';
+                    } else {
+                        const error = await response.json();
+                        messageDiv.textContent = `Verification failed: ${error.message}`;
+                    }
+                } catch (error) {
+                    messageDiv.textContent = 'An error occurred during verification. Please try again.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
