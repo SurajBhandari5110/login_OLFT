@@ -1,4 +1,3 @@
-// Ensure DOM is fully loaded before adding event listeners
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const emailInput = document.getElementById('email');
@@ -52,9 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Check if the response is successful
             if (response.ok) {
-                const data = await response.json();
-                console.log('Response:', data); // Handle the response as needed
-                // Optionally redirect the user or perform other actions
+                // Redirect to dashboard.html
+                window.location.href = 'dashboard.html';
             } else {
                 const errorData = await response.json();
                 alert(`Login failed: ${errorData.message || 'Invalid email or password.'}`);
