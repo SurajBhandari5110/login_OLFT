@@ -18,48 +18,41 @@ document.addEventListener('DOMContentLoaded', () => {
         togglePasswordBtn.innerText = type === 'password' ? '👁️' : '🙈';
     });
 
-    // Form submission handler
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent actual form submission
-
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-
-        // Basic validation
-       
-
-        try {
-            // Send login data to the API endpoint
-            const response = await fetch('http://13.55.169.57:8080/auth/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                }),
-            });
-
-            // Process the response
-            if (response.ok) {
+    
+    
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent actual form submission
+    
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+    
+            try {
+                const response = await fetch('http://13.55.169.57:8080/auth/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+    
                 const responseData = await response.json();
-
-                // Check if email and password match the response
-               
+    
+                if (response.ok && responseData.Success) {
+                    // Save access token and user ID in localStorage
+                    localStorage.setItem('access_token', responseData.Data.access_token);
+                    localStorage.setItem('user_id', responseData.Data.user_id);
+    
+                    alert('Login successful!');
                     window.location.href = 'dashboard.html';
                 } else {
-                    alert('Invalid email or password. Please try again.');
+                    alert(responseData.Message || 'Invalid email or password. Please try again.');
                 }
-           
-        } catch (error) {
-            console.error('Error during login:', error);
-            alert('An error occurred while trying to log in. Please try again later.');
-        }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred while trying to log in. Please try again later.');
+            }
+        });
     });
-
-   
-});
-
-
+    
+    
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Completion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold">Complete Your Profile</h1>
+        <form id="profile-form" class="mt-4">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" class="border p-2 mb-4 block" required>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" class="border p-2 mb-4 block" required>
+
+            <label for="country">Country:</label>
+            <input type="text" id="country" class="border p-2 mb-4 block" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" class="border p-2 mb-4 block">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="user_role">User Role:</label>
+            <input type="text" id="user_role" value="normal" class="border p-2 mb-4 block" readonly>
+
+            <button type="submit" class="bg-blue-500 text-white p-2 rounded">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const userId = localStorage.getItem('user_id');
+            const accessToken = localStorage.getItem('access_token');
+
+            if (!userId || !accessToken) {
+                alert('Missing user authentication. Redirecting to login.');
+                window.location.href = '/';
+                return;
+            }
+
+            const data = {
+                first_name: document.getElementById('first_name').value,
+                last_name: document.getElementById('last_name').value,
+                country: document.getElementById('country').value,
+                gender: document.getElementById('gender').value,
+                user_role: document.getElementById('user_role').value,
+            };
+
+            try {
+                const response = await fetch(`http://13.55.169.57:8080/user/profile-setup/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    alert('Profile setup successful!');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const responseData = await response.json();
+                    alert(responseData.Message || 'Failed to update profile.');
+                }
+            } catch (error) {
+                console.error('Error during profile setup:', error);
+                alert('An error occurred while setting up your profile.');
+            }
+        });
+    </script>
+</body>
+</html>
